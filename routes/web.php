@@ -20,7 +20,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::redirect('/home', '/admin');
 
 Route::group(['prefix' => 'admin'], function() {
     Route::get('/', 'backend\DashboardController@index')->name('admin.dashboard');
+    Route::resource('roles', 'backend\RoleController', ['names' => 'admin.roles']);
 });

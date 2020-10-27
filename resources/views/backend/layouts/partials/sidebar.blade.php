@@ -1,19 +1,26 @@
 <div class="sidebar-menu">
     <div class="sidebar-header">
         <div class="logo">
-            <a href="index.html"><img src="{{ asset('backend/assets/images/icon/logo.png') }}" alt="logo"></a>
+            <a href="/"><img src="{{ asset('backend/assets/images/icon/logo.png') }}" alt="logo"></a>
         </div>
     </div>
     <div class="main-menu">
         <div class="menu-inner">
             <nav>
                 <ul class="metismenu" id="menu">
-                    <li class="active">
+                    <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-dashboard"></i><span>dashboard</span></a>
                         <ul class="collapse">
-                            <li class="active"><a href="index.html">ICO dashboard</a></li>
+                            <li><a href="index.html">ICO dashboard</a></li>
                             <li><a href="index2.html">Ecommerce dashboard</a></li>
                             <li><a href="index3.html">SEO dashboard</a></li>
+                        </ul>
+                    </li>
+                    <li class="{{ request()->is('admin/roles*') ? 'active' : '' }}">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Role</span></a>
+                        <ul class="collapse">
+                            <li class="{{ request()->is('admin/roles') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}">All Roles</a></li>
+                            <li class="{{ request()->is('admin/roles/create') ? 'active' : '' }}"><a href="{{ route('admin.roles.create') }}">Add Role</a></li>
                         </ul>
                     </li>
                     <li>
