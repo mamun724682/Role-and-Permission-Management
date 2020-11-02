@@ -25,4 +25,5 @@ Route::redirect('/home', '/admin');
 Route::group(['prefix' => 'admin'], function() {
     Route::get('/', 'backend\DashboardController@index')->name('admin.dashboard');
     Route::resource('roles', 'backend\RoleController', ['names' => 'admin.roles']);
+    Route::resource('users', 'backend\UserController', ['names' => 'admin.users']);
 });

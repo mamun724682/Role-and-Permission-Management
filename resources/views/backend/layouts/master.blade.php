@@ -23,6 +23,8 @@
     <!-- modernizr css -->
     <script src="{{ asset('backend/assets/js/vendor/modernizr-2.8.3.min.js') }}"></script>
 
+    @notifyCss
+
     @yield('styles')
 </head>
 
@@ -90,6 +92,9 @@
     <!-- others plugins -->
     <script src="{{ asset('backend/assets/js/plugins.js') }}"></script>
     <script src="{{ asset('backend/assets/js/scripts.js') }}"></script>
+
+    @notifyJs
+    <x:notify-messages />
 
     @yield('scripts')
     

@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Roles
+    Users
 @endsection
 
 @section('styles')
@@ -18,10 +18,10 @@
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <div class="breadcrumbs-area clearfix">
-                            <h4 class="page-title pull-left">Roles</h4>
+                            <h4 class="page-title pull-left">Users</h4>
                             <ul class="breadcrumbs pull-left">
                                 <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                                <li><span>Roles</span></li>
+                                <li><span>Users</span></li>
                             </ul>
                         </div>
                     </div>
@@ -37,9 +37,9 @@
                     <div class="col-12 mt-5">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="header-title float-left">All Roles</h4>
+                                <h4 class="header-title float-left">All Users</h4>
                                 <p class="float-right mb-2">
-                                    <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">Create New Role</a>
+                                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create New User</a>
                                 </p>
                                 <div class="clearfix"></div>
                                 <div class="data-tables datatable-dark">
@@ -48,28 +48,30 @@
                                             <tr>
                                                 <th>Sl</th>
                                                 <th>Name</th>
-                                                <th>Permissions</th>
+                                                <th>Email</th>
+                                                <th>Roles</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($roles as $role)
+                                            @foreach ($users as $user)
                                             <tr>
                                                 <td>{{ $loop->index + 1 }}</td>
-                                                <td>{{ ucfirst($role->name) }}</td>
-                                                <td>
-                                                    @foreach ($role->permissions as $permission)
+                                                <td>{{ ucfirst($user->name) }}</td>
+                                                <td>{{ $user->email }}</td>
+                                                {{-- <td>
+                                                    @foreach ($user->permissions as $permission)
                                                         <span class="badge badge-info">
                                                             {{ $permission->name }}
                                                         </span>
                                                     @endforeach
-                                                </td>
+                                                </td> --}}
                                                 <td>
-                                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-primary">Edit</a>
-                                                    <a href="{{ route('admin.roles.destroy', $role->id) }}" class="btn btn-danger" onclick="event.preventDefault();
-                                                    document.getElementById('delete-form-{{ $role->id }}').submit();">Delete</a>
+                                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary">Edit</a>
+                                                    <a href="{{ route('admin.users.destroy', $user->id) }}" class="btn btn-danger" onclick="event.preventDefault();
+                                                    document.getElementById('delete-form-{{ $user->id }}').submit();">Delete</a>
 
-                                                    <form id="delete-form-{{ $role->id }}" action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-none">
+                                                    <form id="delete-form-{{ $user->id }}" action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-none">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>

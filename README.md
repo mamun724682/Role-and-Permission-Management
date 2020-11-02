@@ -7,6 +7,7 @@ Role and Permission Management System using __Laravel 7 (PHP Framework)__ with s
 ## Packages Used
 
 - Laravel Permission
+- Laravel Notify 2
 
 ## Installation Instruction
 

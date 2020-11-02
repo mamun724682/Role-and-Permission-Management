@@ -16,13 +16,22 @@
                             <li><a href="index3.html">SEO dashboard</a></li>
                         </ul>
                     </li>
+
+                    <li class="{{ request()->is('admin/users*') ? 'active' : '' }}">
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Users</span></a>
+                        <ul class="collapse">
+                            <li class="{{ request()->is('admin/users') ? 'active' : '' }}"><a href="{{ route('admin.users.index') }}">All Users</a></li>
+                            <li class="{{ request()->is('admin/users/create') ? 'active' : '' }}"><a href="{{ route('admin.users.create') }}">Add User</a></li>
+                        </ul>
+                    </li>
                     <li class="{{ request()->is('admin/roles*') ? 'active' : '' }}">
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Roles & Permissions</span></a>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-slice"></i><span>Roles & Permissions</span></a>
                         <ul class="collapse">
                             <li class="{{ request()->is('admin/roles') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}">All Roles</a></li>
                             <li class="{{ request()->is('admin/roles/create') ? 'active' : '' }}"><a href="{{ route('admin.roles.create') }}">Add Role</a></li>
                         </ul>
                     </li>
+                    
                     <li>
                         <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout-sidebar-left"></i><span>Sidebar
                             Types

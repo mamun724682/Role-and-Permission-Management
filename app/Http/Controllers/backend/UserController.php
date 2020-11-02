@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 
-class RoleController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +17,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('backend.pages.roles.index', compact('roles'));
+        $users = User::all();
+        return view('backend.pages.users.index', compact('users'));
     }
 
     /**
@@ -28,9 +28,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-    	$permissions_groups = User::getPermissionsGroupName();
-        $all_permissions = Permission::all();
-        return view('backend.pages.roles.create', compact('all_permissions', 'permissions_groups'));
+        $roles = Role::all();
+        return view('backend.pages.users.create', compact('roles'));
     }
 
     /**
@@ -43,20 +42,19 @@ class RoleController extends Controller
     {
     	// dd($request->permissions);
     	$request->validate([
-    		'name' => 'required|unique:roles'
+    		'name' => 'required|unique:users'
     	],[
-    		'name.required' => 'Please give a role name!'
+    		'name.required' => 'Please give a user name!'
     	]);
 
-        $role = Role::create(['name' => $request->name]);
+        $user = Role::create(['name' => $request->name]);
         $permissions = $request->permissions;
 
         if (!empty($permissions)) {
-        	$role->syncPermissions($permissions);
+        	$user->syncPermissions($permissions);
         }
 
-        // session()->flash('success', 'Role has been created!');
-        emotify('success', 'You are awesome, your data was successfully created');
+        session()->flash('success', 'Role has been created!');
         return back();
     }
 
@@ -79,11 +77,10 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-    	$role = Role::findById($id);
+    	$user = User::findById($id);
 
-        $permissions_groups = User::getPermissionsGroupName();
-        $all_permissions = Permission::all();
-        return view('backend.pages.roles.edit', compact('all_permissions', 'permissions_groups', 'role'));
+        $roles = Role::all();
+        return view('backend.pages.users.edit', compact('roles', 'user'));
     }
 
     /**
@@ -96,12 +93,12 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-    		'name' => 'required|unique:roles,name,' . $id
+    		'name' => 'required|unique:users,name,' . $id
     	],[
-    		'name.required' => 'Please give a role name!'
+    		'name.required' => 'Please give a user name!'
     	]);
 
-        $role = Role::findById($id);
+        $user = User::findById($id);
         $permissions = $request->permissions;
 
         if (!empty($permissions)) {
@@ -110,7 +107,7 @@ class RoleController extends Controller
         	$role->syncPermissions($permissions);
         }
 
-        emotify('success', 'You are awesome, your data was successfully updated');
+        session()->flash('success', 'Role has been updated!');
         return back();
     }
 
@@ -122,12 +119,12 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::findById($id);
-        if (!is_null($role)) {
-        	$role->delete();
+        $user = User::findById($id);
+        if (!is_null($user)) {
+        	$user->delete();
         }
 
-        emotify('success', 'You are awesome, your data was successfully deleted');
+        session()->flash('success', 'User has been Deleted!');
         return back();
     }
 }
