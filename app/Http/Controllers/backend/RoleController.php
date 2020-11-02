@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -27,8 +28,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all();
-        return view('backend.pages.roles.create', compact('permissions'));
+    	$permissions_groups = User::getPermissionsGroupName();
+        $all_permissions = Permission::all();
+        return view('backend.pages.roles.create', compact('all_permissions', 'permissions_groups'));
     }
 
     /**
@@ -39,6 +41,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+    	// dd($request->permissions);
     	$request->validate([
     		'name' => 'required|unique:roles'
     	],[
@@ -73,7 +76,11 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+    	$role = Role::findById($id);
+
+        $permissions_groups = User::getPermissionsGroupName();
+        $all_permissions = Permission::all();
+        return view('backend.pages.roles.edit', compact('all_permissions', 'permissions_groups', 'role'));
     }
 
     /**
@@ -85,7 +92,19 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+    		'name' => 'required'
+    	],[
+    		'name.required' => 'Please give a role name!'
+    	]);
+
+        $role = Role::findById($id);
+        $permissions = $request->permissions;
+
+        if (!empty($permissions)) {
+        	$role->syncPermissions($permissions);
+        }
+        return back();
     }
 
     /**

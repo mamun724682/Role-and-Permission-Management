@@ -17,7 +17,7 @@
                         </ul>
                     </li>
                     <li class="{{ request()->is('admin/roles*') ? 'active' : '' }}">
-                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Role</span></a>
+                        <a href="javascript:void(0)" aria-expanded="true"><i class="ti-user"></i><span>Roles & Permissions</span></a>
                         <ul class="collapse">
                             <li class="{{ request()->is('admin/roles') ? 'active' : '' }}"><a href="{{ route('admin.roles.index') }}">All Roles</a></li>
                             <li class="{{ request()->is('admin/roles/create') ? 'active' : '' }}"><a href="{{ route('admin.roles.create') }}">Add Role</a></li>
