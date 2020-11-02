@@ -1,14 +1,11 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Role Edit - Admin Panel
+User Edit - Admin Panel
 @endsection
 
 @section('styles')
-<style>
-.form-check-label {
-    text-transform: capitalize;
-}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </style>
 @endsection
 
@@ -20,11 +17,11 @@ Role Edit - Admin Panel
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="breadcrumbs-area clearfix">
-                <h4 class="page-title pull-left">Role Edit</h4>
+                <h4 class="page-title pull-left">User Edit</h4>
                 <ul class="breadcrumbs pull-left">
                     <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li><a href="{{ route('admin.roles.index') }}">All Roles</a></li>
-                    <li><span>Edit Role</span></li>
+                    <li><a href="{{ route('admin.users.index') }}">All Users</a></li>
+                    <li><span>Edit Users</span></li>
                 </ul>
             </div>
         </div>
@@ -41,64 +38,39 @@ Role Edit - Admin Panel
         <div class="col-12 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="header-title">Edit Role</h4>
+                    <h4 class="header-title">Edit User</h4>
                     @include('backend.layouts.partials.message')
                     
-                    <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
-
+                    <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-
-                        <div class="form-group">
-                            <label for="name">Role Name</label>
-                            <input type="text" value="{{ $role->name }}" class="form-control" id="name" name="name" placeholder="Enter a Role Name">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Name" value="{{ $user->name }}" required="">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" value="{{ $user->email }}" required="">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" value="">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cpassword">Confirm Password</label>
+                                <input type="password" name="password_confirmation" class="form-control" id="cpassword" placeholder="Password" value="">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="name">Permissions</label>
-
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="checkPermissionAll" value="1" {{ App\User::roleHasPermissions($role, $all_permissions) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="checkPermissionAll">All</label>
-                            </div>
-                            <hr>
-                            @php $i = 1; @endphp
-                            @foreach ($permissions_groups as $group)
-                            <div class="row">
-                                @php
-                                $permissions = App\User::getpermissionsByGroupName($group->name);
-                                $j = 1;
-                                @endphp
-
-                                <div class="col-3">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="{{ $i }}Management" value="{{ $group->name }}" onclick="checkPermissionByGroup('role-{{ $i }}-management-checkbox', this)" {{ App\User::roleHasPermissions($role, $permissions) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="checkPermission">{{ $group->name }}</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-9 role-{{ $i }}-management-checkbox">
-
-                                    @foreach ($permissions as $permission)
-                                    <div class="form-check">
-                                        <input type="checkbox" {{ $role->hasPermissionTo($permission->name) ? 'checked' : '' }} class="form-check-input" name="permissions[]" id="checkPermission{{ $permission->id }}" value="{{ $permission->name }}" onclick="checkSinglePermission('role-{{ $i }}-management-checkbox', '{{ $i }}Management', {{ count($permissions) }})">
-                                        <label class="form-check-label" for="checkPermission{{ $permission->id }}">{{ $permission->name }}</label>
-                                    </div>
-
-                                    @php  $j++; @endphp
-                                    @endforeach
-
-                                    <br>
-                                </div>
-                            </div>
-
-                            @php  $i++; @endphp
-                            @endforeach
-                            
-                        </div>
-
-                        
-                        <button type="submit" class="btn btn-info mt-4 pr-4 pl-4">Update Role</button>
+                        <select class="form-control js-example-basic-multiple" name="roles[]" multiple="multiple">
+                          @foreach ($roles as $role)
+                              <option value="{{ $role->name }}" {{ $user->hasRole($role->name)? 'selected' : '' }}>{{ $role->name }}</option>
+                          @endforeach
+                      </select>
+                        <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Update User</button>
                     </form>
                 </div>
             </div>
@@ -109,5 +81,10 @@ Role Edit - Admin Panel
 
 
 @section('scripts')
-@include('backend.layouts.partials.scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});
+</script>
 @endsection

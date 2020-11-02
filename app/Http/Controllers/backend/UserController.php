@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
@@ -40,22 +41,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-    	// dd($request->permissions);
+    	// dd($request->all());
     	$request->validate([
-    		'name' => 'required|unique:users'
-    	],[
-    		'name.required' => 'Please give a user name!'
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8|confirmed',
     	]);
 
-        $user = Role::create(['name' => $request->name]);
-        $permissions = $request->permissions;
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
 
-        if (!empty($permissions)) {
-        	$user->syncPermissions($permissions);
+        if ($request->roles) {
+            $user->assignRole($request->roles);
         }
 
-        session()->flash('success', 'Role has been created!');
-        return back();
+        emotify('success', 'You are awesome, your data was successfully created!');
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -77,7 +81,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-    	$user = User::findById($id);
+    	$user = User::findOrFail($id);
 
         $roles = Role::all();
         return view('backend.pages.users.edit', compact('roles', 'user'));
@@ -92,22 +96,26 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = User::find($id);
+
         $request->validate([
-    		'name' => 'required|unique:users,name,' . $id
-    	],[
-    		'name.required' => 'Please give a user name!'
-    	]);
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|min:8|confirmed',
+        ]);
 
-        $user = User::findById($id);
-        $permissions = $request->permissions;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
 
-        if (!empty($permissions)) {
-        	$role->name = $request->name;
-        	$role->save();
-        	$role->syncPermissions($permissions);
+        if ($request->roles) {
+            $user->syncRoles($request->roles);
         }
 
-        session()->flash('success', 'Role has been updated!');
+        emotify('success', 'You are awesome, your data was successfully updated!');
         return back();
     }
 
@@ -119,12 +127,12 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findById($id);
+        $user = User::find($id);
         if (!is_null($user)) {
         	$user->delete();
         }
 
-        session()->flash('success', 'User has been Deleted!');
+        emotify('success', 'You are awesome, your data was successfully deleted!');
         return back();
     }
 }

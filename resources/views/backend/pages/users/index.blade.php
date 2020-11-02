@@ -59,13 +59,13 @@
                                                 <td>{{ $loop->index + 1 }}</td>
                                                 <td>{{ ucfirst($user->name) }}</td>
                                                 <td>{{ $user->email }}</td>
-                                                {{-- <td>
-                                                    @foreach ($user->permissions as $permission)
+                                                <td>
+                                                    @foreach ($user->roles as $role)
                                                         <span class="badge badge-info">
-                                                            {{ $permission->name }}
+                                                            {{ $role->name }}
                                                         </span>
                                                     @endforeach
-                                                </td> --}}
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary">Edit</a>
                                                     <a href="{{ route('admin.users.destroy', $user->id) }}" class="btn btn-danger" onclick="event.preventDefault();
