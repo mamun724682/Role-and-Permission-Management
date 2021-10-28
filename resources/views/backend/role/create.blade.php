@@ -38,6 +38,11 @@
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Permissions</label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="permissoinAll">
+                                    <label class="form-check-label" for="permissoinAll">All</label>
+                                </div>
+                                <hr>
                                 @forelse($permissions as $permission)
                                     <div class="form-check">
                                         <input type="checkbox" name="permissions[]" value="{{ $permission->name }}" class="form-check-input" id="permissoin{{$permission->id}}">
@@ -56,3 +61,17 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $('#permissoinAll').click(function () {
+            if($(this).is(':checked')){
+                //Check all
+                $('input[type=checkbox]').prop('checked', true)
+            }else{
+                //Uncheck all
+                $('input[type=checkbox]').prop('checked', false)
+            }
+        });
+    </script>
+@endpush
