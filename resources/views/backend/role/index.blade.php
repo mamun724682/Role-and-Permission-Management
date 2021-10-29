@@ -35,6 +35,7 @@
                                     <th>SL</th>
                                     <th>Name</th>
                                     <th>Action</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -43,7 +44,11 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $role->name }}</td>
-                                        <td>Tokyo</td>
+                                        <td>
+                                            <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-info btn-sm">Edit</a>
+                                            <a href="{{ route('admin.roles.destroy', $role->id) }}" class="btn btn-danger btn-sm">Delete</a>
+                                        </td>
+                                        <td></td>
                                     </tr>
                                 @empty
                                 @endforelse

@@ -42,4 +42,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function roleHasPermissions($role, $permissions)
+    {
+        foreach ($permissions as $permission) {
+            if (!$role->hasPermissionTo($permission)){
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

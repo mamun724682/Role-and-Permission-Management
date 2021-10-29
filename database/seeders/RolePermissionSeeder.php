@@ -22,36 +22,57 @@ class RolePermissionSeeder extends Seeder
         $userRole = Role::create(['name' => 'user']);
 
         //List of permissions
-        $permissions = [
+        $permissionGroups = [
             //Dashboard
-            'dashboard.view',
-
+            [
+                'group_name' => 'dashboard',
+                'permissions' => [
+                    'dashboard.view',
+                    'dashboard.edit'
+                ]
+            ],
             //Blog
-            'blog.create',
-            'blog.view',
-            'blog.edit',
-            'blog.delete',
-            'blog.approve',
-
+            [
+                'group_name' => 'blog',
+                'permissions' => [
+                    'blog.create',
+                    'blog.view',
+                    'blog.edit',
+                    'blog.delete',
+                    'blog.approve',
+                ]
+            ],
             //Admin
-            'admin.create',
-            'admin.view',
-            'admin.edit',
-            'admin.delete',
-            'admin.approve',
-
+            [
+                'group_name' => 'admin',
+                'permissions' => [
+                    'admin.create',
+                    'admin.view',
+                    'admin.edit',
+                    'admin.delete',
+                    'admin.approve',
+                ]
+            ],
             //Profile
-            'profile.view',
-            'profile.edit'
+            [
+                'group_name' => 'profile',
+                'permissions' => [
+                    'profile.view',
+                    'profile.edit'
+                ]
+            ]
         ];
 
         //Create permission and assign to role
-        foreach ($permissions as $permission) {
-            //Create permission
-            Permission::create(['name' => $permission]);
+        foreach ($permissionGroups as $group) {
+            $group_name = $group['group_name'];
+            foreach ($group['permissions'] as $permission) {
+                //Create permission
+                Permission::create(['name' => $permission, 'group_name' => $group_name]);
 
-            //Assign permission
-            $superAdminRole->givePermissionTo($permission);
+                //Assign permission
+                $superAdminRole->givePermissionTo($permission);
+            }
         }
     }
 }

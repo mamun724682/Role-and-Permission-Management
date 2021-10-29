@@ -17,8 +17,8 @@ class RoleController extends Controller
 
     public function create()
     {
-        $permissions = Permission::all();
-        return view('backend.role.create', compact('permissions'));
+        $permissionGroups = Permission::get()->groupby('group_name');
+        return view('backend.role.create', compact('permissionGroups'));
     }
 
     public function store(Request $request)
@@ -41,46 +41,36 @@ class RoleController extends Controller
         return  back()->with($notification);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        //
+        $permissionGroups = Permission::get()->groupby('group_name');
+        return view('backend.role.edit', compact('permissionGroups', 'role'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
-        //
+        $request->validate([
+            'role' => ['required', 'max:100', 'unique:roles,name,'.$role->id],
+            'permissions' => ['required', 'array']
+        ]);
+
+        if (!empty($request->permissions)){
+            $role->syncPermissions($request->permissions);
+        }
+
+        $notification = array(
+            'message' => 'Role updated!',
+            'alert-type' => 'success'
+        );
+
+        return  back()->with($notification);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
