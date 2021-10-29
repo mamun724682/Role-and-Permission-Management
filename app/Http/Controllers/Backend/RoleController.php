@@ -41,11 +41,6 @@ class RoleController extends Controller
         return  back()->with($notification);
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function edit(Role $role)
     {
         $permissionGroups = Permission::get()->groupby('group_name');
@@ -59,6 +54,9 @@ class RoleController extends Controller
             'permissions' => ['required', 'array']
         ]);
 
+        $role->name = $request->role;
+        $role->save();
+
         if (!empty($request->permissions)){
             $role->syncPermissions($request->permissions);
         }
@@ -71,8 +69,15 @@ class RoleController extends Controller
         return  back()->with($notification);
     }
 
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        //
+        $role->delete();
+
+        $notification = array(
+            'message' => 'Role deleted!',
+            'alert-type' => 'success'
+        );
+
+        return  back()->with($notification);
     }
 }

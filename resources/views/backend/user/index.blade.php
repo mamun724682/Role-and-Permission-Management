@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 
-@section('title', 'Roles')
+@section('title', 'Users')
 
 @section('content')
     <!-- page title area start -->
@@ -8,10 +8,10 @@
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <div class="breadcrumbs-area clearfix">
-                    <h4 class="page-title pull-left">All Roles</h4>
+                    <h4 class="page-title pull-left">All Users</h4>
                     <ul class="breadcrumbs pull-left">
                         <li><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li><span>All Roles</span></li>
+                        <li><span>All Users</span></li>
                     </ul>
                 </div>
             </div>
@@ -27,34 +27,36 @@
             <div class="col-12 mt-5">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="header-title">Roles List</h4>
+                        <h4 class="header-title">Users List</h4>
                         <div class="data-tables">
                             <table id="dataTable" class="text-center">
                                 <thead class="bg-light text-capitalize">
                                 <tr>
                                     <th>SL</th>
                                     <th>Name</th>
-                                    <th>Permissions</th>
+                                    <th>Email</th>
+                                    <th>Roles</th>
                                     <th>Action</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                @forelse($roles as $role)
+                                @forelse($users as $user)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $role->name }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
                                         <td>
-                                            @forelse($role->permissions as $permission)
-                                                <span class="badge badge-info mr-1 text-capitalize">{{ $permission->name }}</span>
+                                            @forelse($user->roles as $role)
+                                                <span class="badge badge-info mr-1 text-capitalize">{{ $role->name }}</span>
                                             @empty
                                             @endforelse
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-info btn-sm">Edit</a>
+                                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-info btn-sm">Edit</a>
 
-                                            <form method="POST" action="{{ route('admin.roles.destroy', $role->id) }}" class="d-inline">
+                                            <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
 

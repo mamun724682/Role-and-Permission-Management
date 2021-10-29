@@ -26,4 +26,5 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function (){
     Route::get('/', [\App\Http\Controllers\Backend\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/roles', \App\Http\Controllers\Backend\RoleController::class);
+    Route::resource('/users', \App\Http\Controllers\Backend\UserController::class);
 });
