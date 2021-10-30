@@ -10,18 +10,9 @@ use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
-    public $admin;
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next){
-            $this->admin = auth()->guard('admin')->user();
-            return $next($request);
-        });
-    }
-
     public function index()
     {
-        abort_if(!$this->admin || !$this->admin->can('admin.view'), 403);
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('admin.view'), 403);
 
         $admins = Admin::latest()->get();
         return view('backend.admin.index', compact('admins'));
@@ -29,7 +20,7 @@ class AdminController extends Controller
 
     public function create()
     {
-        abort_if(!$this->admin || !$this->admin->can('admin.create'), 403);
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('admin.create'), 403);
 
         $roles = Role::all();
         return view('backend.admin.create', compact('roles'));
@@ -37,7 +28,7 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        abort_if(!$this->admin || !$this->admin->can('admin.create'), 403);
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('admin.create'), 403);
 
         $request->validate([
             'name' => ['required', 'max:100'],
@@ -67,7 +58,7 @@ class AdminController extends Controller
 
     public function edit(Admin $admin)
     {
-        abort_if(!$this->admin || !$this->admin->can('admin.edit'), 403);
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('admin.edit'), 403);
 
         $roles = Role::all();
         return view('backend.admin.edit', compact('roles', 'admin'));
@@ -75,7 +66,7 @@ class AdminController extends Controller
 
     public function update(Request $request, Admin $admin)
     {
-        abort_if(!$this->admin || !$this->admin->can('admin.edit'), 403);
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('admin.edit'), 403);
 
         $request->validate([
             'name' => ['required', 'max:100'],
@@ -106,7 +97,7 @@ class AdminController extends Controller
 
     public function destroy(Admin $admin)
     {
-        abort_if(!$this->admin || !$this->admin->can('admin.delete'), 403);
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('admin.delete'), 403);
 
         $admin->delete();
 

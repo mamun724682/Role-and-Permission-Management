@@ -9,18 +9,9 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
-    public $admin;
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next){
-            $this->admin = auth()->guard('admin')->user();
-            return $next($request);
-        });
-    }
-
     public function index()
     {
-        abort_if(!$this->admin || !$this->admin->can('role.view'), 403, 'You are not authorized to view role');
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('role.view'), 403, 'You are not authorized to view role');
 
         $roles = Role::all();
         return view('backend.role.index', compact('roles'));
@@ -28,7 +19,7 @@ class RoleController extends Controller
 
     public function create()
     {
-        abort_if(!$this->admin || !$this->admin->can('role.create'), 403, 'You are not authorized to create role');
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('role.create'), 403, 'You are not authorized to create role');
 
         $permissionGroups = Permission::get()->groupby('group_name');
         return view('backend.role.create', compact('permissionGroups'));
@@ -56,7 +47,7 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        abort_if(!$this->admin || !$this->admin->can('role.edit'), 403, 'You are not authorized to edit role');
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('role.edit'), 403, 'You are not authorized to edit role');
 
         $permissionGroups = Permission::get()->groupby('group_name');
         return view('backend.role.edit', compact('permissionGroups', 'role'));
@@ -87,7 +78,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        abort_if(!$this->admin || !$this->admin->can('role.delete'), 403, 'You are not authorized to delete role');
+        abort_if(!auth()->guard('admin')->user() || !auth()->guard('admin')->user()->can('role.delete'), 403, 'You are not authorized to delete role');
 
         $role->delete();
 
