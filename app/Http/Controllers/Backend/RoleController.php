@@ -9,14 +9,27 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public $admin;
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next){
+            $this->admin = auth()->guard('admin')->user();
+            return $next($request);
+        });
+    }
+
     public function index()
     {
+        abort_if(!$this->admin || !$this->admin->can('role.view'), 403, 'You are not authorized to view role');
+
         $roles = Role::all();
         return view('backend.role.index', compact('roles'));
     }
 
     public function create()
     {
+        abort_if(!$this->admin || !$this->admin->can('role.create'), 403, 'You are not authorized to create role');
+
         $permissionGroups = Permission::get()->groupby('group_name');
         return view('backend.role.create', compact('permissionGroups'));
     }
@@ -28,7 +41,7 @@ class RoleController extends Controller
             'permissions' => ['required', 'array']
         ]);
 
-        $role = Role::create(['name' => $request->role]);
+        $role = Role::create(['name' => $request->role, 'guard_name' => 'admin']);
         if (!empty($request->permissions)){
             $role->syncPermissions($request->permissions);
         }
@@ -43,6 +56,8 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        abort_if(!$this->admin || !$this->admin->can('role.edit'), 403, 'You are not authorized to edit role');
+
         $permissionGroups = Permission::get()->groupby('group_name');
         return view('backend.role.edit', compact('permissionGroups', 'role'));
     }
@@ -55,6 +70,7 @@ class RoleController extends Controller
         ]);
 
         $role->name = $request->role;
+        $role->guard_name = 'admin';
         $role->save();
 
         if (!empty($request->permissions)){
@@ -71,6 +87,8 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        abort_if(!$this->admin || !$this->admin->can('role.delete'), 403, 'You are not authorized to delete role');
+
         $role->delete();
 
         $notification = array(
